@@ -163,7 +163,7 @@ public class Dcat {
        int n = s.dimension();//Let n be the dimension of s
        int width=original.numberOfSimplicesInDimension(n+1);//The number of simplices of dimension n+1
        int minIndex = original.getIndexOfFirstSimplexOfDimension(n+1);//Index we start checking
-       System.out.println("Searching simplex "+ s.name()+" starting at index "+minIndex+"with width "+width);
+       System.out.println("Searching simplex "+ s.name()+" starting at index "+minIndex+" with width "+width);
        Simplex currentSimplex = null;//Create a place to store the working simplex
        ArrayList<Simplex> candidates;//All possible expansions
        for(int i=0;i<width; i++){//check every candidate, indices between minIndex and minIndex+width
