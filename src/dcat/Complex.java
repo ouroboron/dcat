@@ -180,8 +180,9 @@ public class Complex {
     }
     
     public int numberOfSimplicesInDimension(int n){
-        if(n==this.dimension())
-            return (getSimplices().size()-1)-getIndexOfFirstSimplexOfDimension(n);
+        if(n==this.dimension()){
+            return (getSimplices().size())-getIndexOfFirstSimplexOfDimension(n);
+        }
         else
             return getIndexOfFirstSimplexOfDimension(n+1)-getIndexOfFirstSimplexOfDimension(n);
     }
@@ -197,7 +198,7 @@ public class Complex {
         Random rand = new Random();
         int randMax=max-min;
         int ret = rand.nextInt(randMax)+min;
-        System.out.println("Random value is: "+ret);
+        //System.out.println("Random value is: "+ret);
         return ret;
     }   
     

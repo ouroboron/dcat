@@ -159,22 +159,24 @@ public class Dcat {
        
    }
 
-   public static void search(Simplex s, Complex collapse,Complex original, int n){
-       int width=original.numberOfSimplicesInDimension(n);
-       System.out.println("Searching simplex "+ s.name());
-       int minIndex = original.getIndexOfFirstSimplexOfDimension(n);
-       Simplex currentSimplex = null;
-       ArrayList<Simplex> candidates;
-       for(int i=0;i<=width; i++){
-           currentSimplex=original.getSimplexAtIndex(i+minIndex);
-           if(currentSimplex.contains(s)&&!collapse.inComplex(s)){
-               candidates=s.getSkeleton(n-1);
-               int containedElements =0;
-               for(int j=0; j<candidates.size(); j++){
-                   if(collapse.inComplex(candidates.get(j))){
-                       containedElements++;
-                       if(containedElements==n){
-                           collapse.addSimplexWithDescription(candidates.get(j).name());
+   public static void search(Simplex s, Complex collapse,Complex original){
+       int n = s.dimension();//Let n be the dimension of s
+       int width=original.numberOfSimplicesInDimension(n+1);//The number of simplices of dimension n+1
+       int minIndex = original.getIndexOfFirstSimplexOfDimension(n+1);//Index we start checking
+       System.out.println("Searching simplex "+ s.name()+" starting at index "+minIndex+"with width "+width);
+       Simplex currentSimplex = null;//Create a place to store the working simplex
+       ArrayList<Simplex> candidates;//All possible expansions
+       for(int i=0;i<width; i++){//check every candidate, indices between minIndex and minIndex+width
+           log("Checking at Index "+(i+minIndex));
+           currentSimplex=original.getSimplexAtIndex(i+minIndex);//grab the next possible expansion
+           if(currentSimplex.contains(s)&&!collapse.inComplex(s)){//If it contains s, and isn't already there
+               candidates=s.getSkeleton(n);//get all of it's n simplices
+               int containedElements =0;//create a counter
+               for(int j=0; j<candidates.size(); j++){//loop through said n-simplices
+                   if(collapse.inComplex(candidates.get(j))){//if collapse has said simplex
+                       containedElements++;//increment the counter
+                       if(containedElements==n+1){//and if the counter = n+1
+                           collapse.addSimplexWithDescription(candidates.get(j).name());//add it to collapse
                        }
                    }
                }
@@ -182,6 +184,9 @@ public class Dcat {
        }
    }
   
+   public void determineCategory(Complex complex){
+       
+   }
    
     /**
      * 
@@ -194,12 +199,12 @@ public class Dcat {
         ArrayList<Complex> collapses=new ArrayList();
         while(check.getSimplices().size()!=complex.getSimplices().size()){
             collapse=new Complex();
-            do{
+            //do{
                 collapse.addSimplexWithDescription(complex.getRandomUnsearchedSimplexOfDimension(complex.dimension()).name());
-            }
-            while(collapse.getSimplexAtIndex(collapse.getIndexOfFirstSimplexOfDimension(complex.dimension())).isSearched());
+            //}
+            //while(collapse.getSimplexAtIndex(collapse.getIndexOfFirstSimplexOfDimension(complex.dimension())).isSearched());
             log("Starting new Complex with the seed ");
-            collapse.print();
+            //collapse.print();
             //Catch each dimension sequentially going up
             int maxDim=complex.dimension();//Highest dimension to consider
             for(int i=0; i<maxDim; i++){
@@ -207,7 +212,7 @@ public class Dcat {
                 while(true){
                     Simplex simplex =collapse.getRandomUnsearchedSimplexOfDimension(i);
                     if(!simplex.name().equals("Q")){
-                        search(simplex, collapse,complex, i+1);
+                        search(simplex, collapse,complex);
                     }
                     else break;
                 }
