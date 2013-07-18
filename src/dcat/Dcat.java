@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 
@@ -184,26 +183,14 @@ public class Dcat {
        }
    }
   
-   public void determineCategory(Complex complex){
-       
-   }
-   
-    /**
-     * 
-     */
-    public static void main(String args[]) {
-        
-        Complex complex = getComplex();
+   public static ArrayList<Complex> getCover(Complex complex){
         Complex check=new Complex();
         Complex collapse;
         ArrayList<Complex> collapses=new ArrayList();
         while(check.getSimplices().size()!=complex.getSimplices().size()){
             collapse=new Complex();
-            //do{
                 collapse.addSimplexWithDescription(complex.getRandomUnsearchedSimplexOfDimension(complex.dimension()).name());
-            //}
-            //while(collapse.getSimplexAtIndex(collapse.getIndexOfFirstSimplexOfDimension(complex.dimension())).isSearched());
-            log("Starting new Complex with the seed ");
+            //log("Starting new Complex with the seed ");
             //collapse.print();
             //Catch each dimension sequentially going up
             int maxDim=complex.dimension();//Highest dimension to consider
@@ -221,7 +208,49 @@ public class Dcat {
             check.union(collapse);
             //complex.resetSearchedFlag();
         }
-        System.out.println("The category of the complex is at most "+(collapses.size()-1));
+        return collapses;
+   }
+   
+   public static int computeLowerBound(Complex complex){
+       return 0;
+   }
+   
+    /**
+     * 
+     */
+    public static void main(String args[]) {
+        Scanner in = new Scanner (System.in);
+        Complex complex = getComplex();
+        int low = computeLowerBound(complex);
+        int testNum=1;
+        boolean valid=false;
+        do{
+            try{
+            log("Run how many tests?");
+            testNum=in.nextInt();
+            valid=true;
+            }
+            catch(Exception e){
+                log("Not a Number");
+            }
+        }
+        while(!valid);
+        ArrayList<Complex> cover=new ArrayList();
+        for(int i=0;i<testNum;i++){
+            cover=getCover(complex);
+            if(cover.size()==low)
+                break;
+            complex.resetSearchTally();
+        }
+        int high;
+        if(cover.size()==0)
+            high=0;
+        else
+            high=cover.size()-1;
+        if(low==high)
+            log("The category is "+high+".");
+        else
+            System.out.println("The category of the complex is between "+low+" and "+high+".");
     }
     public static void log(String s){
         System.out.println(s);

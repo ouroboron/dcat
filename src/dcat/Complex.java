@@ -187,6 +187,12 @@ public class Complex {
             return getIndexOfFirstSimplexOfDimension(n+1)-getIndexOfFirstSimplexOfDimension(n);
     }
     
+    public void resetSearchTally(){
+        for(int i=0; i<searchTally.length;i++){
+            searchTally[i]=0;
+        }
+    }
+    
     
     /**
      * Returns a random number between min(inclusive) and max(exclusive)
